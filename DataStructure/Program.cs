@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DataStructure.MyDictionary;
 
 class Program
@@ -9,10 +10,24 @@ class Program
         MyDictionary<string, int> myDict = new MyDictionary<string, int>();
         Dictionary<string, int> dict = new Dictionary<string, int>();
 
-        foreach (KeyValuePair<string, int> pair in dict)
-        { }
+        Stopwatch watch = new Stopwatch();
 
-        foreach (KeyValuePair<string, int> pair in myDict)
-        { }
+        watch.Start();
+        for (int i = 0; i < 100000; i++)
+        {
+            myDict[i + "번째"] = i;
+        }
+        watch.Stop();
+        Console.WriteLine("MyDictionary에 100000개 추가하기 : " + watch.ElapsedMilliseconds.ToString());
+
+        watch.Reset();
+
+        watch.Start();
+        for (int i = 0; i < 100000; i++)
+        {
+            dict[i + "번째"] = i;
+        }
+        watch.Stop();
+        Console.WriteLine("Dictionary에 100000개 추가하기 : " + watch.ElapsedMilliseconds.ToString());
     }
 }
