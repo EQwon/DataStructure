@@ -72,6 +72,35 @@ namespace DataStructure
             }
         }
 
+        public bool ContainsKey(TKey key)
+        {
+            return FindEntry(key) >= 0;
+        }
+
+        public bool ContainsValue(TValue value)
+        {
+            if (value == null)
+            {
+                foreach (Entry entry in entries)
+                {
+                    if (entry.hashCode >= 0 && entry.value == null)
+                        return true;
+                }
+            }
+            else
+            {
+                MyEqualityComparer<TValue> c = MyEqualityComparer<TValue>.Default;
+
+                foreach (Entry entry in entries)
+                {
+                    if (entry.hashCode >=0 && c.Equals(value, entry.value))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool Remove(TKey key)
         {
             if (key == null) Console.WriteLine("Key가 null입니다.");
