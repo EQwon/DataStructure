@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace DataStructure
+
+namespace DataStructure.MyDictionary
 {
-    public class MyDictionary<TKey, TValue>
+    public partial class MyDictionary<TKey, TValue>
     {
         private struct Entry
         {
