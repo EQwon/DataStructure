@@ -60,6 +60,18 @@ namespace DataStructure
             Insert(key, value, true);
         }
 
+        public void Clear()
+        {
+            if (count > 0)
+            {
+                for (int i = 0; i < buckets.Length; i++) buckets[i] = -1;
+                Array.Clear(entries, 0, entries.Length);
+                count = 0;
+                freeList = -1;
+                freeCount = 0;
+            }
+        }
+
         public bool Remove(TKey key)
         {
             if (key == null) Console.WriteLine("Key가 null입니다.");
