@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataStructure
 {
@@ -21,7 +19,7 @@ namespace DataStructure
         private int freeCount;
         private IMyEqualityComparer<TKey> comparer;
 
-        #region 생성자
+        #region 생성자 (Constructor)
         public MyDictionary() : this(0, null) { }
 
         public MyDictionary(int capacity) : this(capacity, null) { }
@@ -36,16 +34,7 @@ namespace DataStructure
         }
         #endregion
 
-        private void Initialize(int capacity)
-        {
-            int size = HashHelper.GetPrime(capacity);
-            buckets = new int[size];
-            for (int i = 0; i < buckets.Length; i++) buckets[i] = -1;
-            entries = new Entry[size];
-            freeList = -1;
-        }
-
-        #region 주요 기능
+        #region 속성 (Property)
         public TValue this[TKey key]
         {
             get
@@ -62,6 +51,10 @@ namespace DataStructure
             }
         }
 
+        public int Count => count - freeCount;
+        #endregion
+
+        #region 메소드 (Method)
         public void Add(TKey key, TValue value)
         {
             Insert(key, value, true);
@@ -103,9 +96,16 @@ namespace DataStructure
 
             return false;
         }
-
-        public int Count => count - freeCount;
         #endregion
+
+        private void Initialize(int capacity)
+        {
+            int size = HashHelper.GetPrime(capacity);
+            buckets = new int[size];
+            for (int i = 0; i < buckets.Length; i++) buckets[i] = -1;
+            entries = new Entry[size];
+            freeList = -1;
+        }
 
         private int FindEntry(TKey key)
         {
