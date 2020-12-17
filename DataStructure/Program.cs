@@ -7,27 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        MyDictionary<string, int> myDict = new MyDictionary<string, int>();
-        Dictionary<string, int> dict = new Dictionary<string, int>();
-
-        Stopwatch watch = new Stopwatch();
-
-        watch.Start();
-        for (int i = 0; i < 100000; i++)
-        {
-            myDict[i + "번째"] = i;
-        }
-        watch.Stop();
-        Console.WriteLine("MyDictionary에 100000개 추가하기 : " + watch.ElapsedMilliseconds.ToString());
-
-        watch.Reset();
-
-        watch.Start();
-        for (int i = 0; i < 100000; i++)
-        {
-            dict[i + "번째"] = i;
-        }
-        watch.Stop();
-        Console.WriteLine("Dictionary에 100000개 추가하기 : " + watch.ElapsedMilliseconds.ToString());
+        int i = int.MaxValue;
+        Console.WriteLine($"{i}의 두 배를 long으로 표현하면 {2 * (long)i} 인데 이것을 다시 int로 캐스팅하면 {(int)(2 * (long)i)}");
     }
 }
