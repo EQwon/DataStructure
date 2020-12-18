@@ -29,12 +29,8 @@
     - key가 존재하지 않으면 false
     - key가 존재하면 해당 부분을 초기화 시키고 빈공간임을 등록. O(1)
     
-------------------
-
 # HashHelper
   - 해쉬테이블을 만들기 위해 적절한 소수를 찾아주는 클래스
-
-------------------
 
 # IMyEqualityComparer, MyEqualityComparer
 
