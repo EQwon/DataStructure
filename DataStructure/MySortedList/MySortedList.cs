@@ -13,6 +13,9 @@ namespace DataStructure.MySortedList
         static TKey[] emptyKeys = new TKey[0];
         static TValue[] emptyValues = new TValue[0];
 
+        private readonly int _defaultCapacity = 4;
+        private readonly int MaxArrayLength = 0x7FEFFFFF;
+
         #region 생성자 (Constructor)
         public MySortedList()
         {
@@ -47,6 +50,7 @@ namespace DataStructure.MySortedList
         #endregion
 
         #region 속성 (Property)
+        // SortedList의 최대 용량을 가져오거나 설정합니다.
         public int Capacity
         {
             get => keys.Length;
@@ -79,6 +83,63 @@ namespace DataStructure.MySortedList
                 }
             }
         }
+
+        // SortedList에 포함된 요소의 수를 가져옵니다.
+        public int Count => _size;
         #endregion
+
+        #region 메소드 (Method)
+        public void Add(TKey key, TValue value)
+        {
+            if (key == null)
+            {
+                Console.WriteLine("Key가 null입니다!");
+                return;
+            }
+
+            // SortHelper를 통해 key에 해당하는 위치를 찾습니다.
+            // 만약 양수라면 key가 이미 존재하는, 중복된 key라는 뜻이고
+            // 음수라면 NOT 연산을 통해 삽입되어야하는 위치를 얻을 수 있습니다.
+            int index = SortHelper<TKey>.BinaraySearch(keys, 0, _size, key, comparer);
+            if (index >= 0)
+            {
+                Console.WriteLine("중복된 key를 추가하려고 하고 있습니다.");
+                return;
+            }
+
+            Insert(~index, key, value);
+        }
+
+        public void Clear()
+        {
+            Array.Clear(keys, 0, _size);
+            Array.Clear(values, 0, _size);
+            _size = 0;
+        }
+        #endregion
+
+        // index의 위치에 key와 value를 삽입합니다.
+        private void Insert(int index, TKey key, TValue value)
+        {
+            if (_size == keys.Length) EnsureCapacity(_size + 1);
+            if (index < _size)
+            {
+                Array.Copy(keys, index, keys, index + 1, _size - index);
+                Array.Copy(values, index, values, index + 1, _size - index);
+            }
+
+            keys[index] = key;
+            values[index] = value;
+            _size++;
+        }
+
+        // SortedList가 min 이상의 용량을 가지는 것을 보장합니다.
+        private void EnsureCapacity(int min)
+        {
+            int newCapacity = keys.Length == 0 ? _defaultCapacity : keys.Length * 2;
+            if ((uint)newCapacity > MaxArrayLength) newCapacity = MaxArrayLength;
+            if (newCapacity < min) newCapacity = min;
+            Capacity = newCapacity;
+        }
     }
 }
