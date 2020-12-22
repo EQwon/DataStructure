@@ -86,6 +86,28 @@ namespace DataStructure.MySortedList
 
         // SortedList에 포함된 요소의 수를 가져옵니다.
         public int Count => _size;
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                int i = IndexOfKey(key);
+                if (i >= 0)
+                    return values[i];
+
+                Console.WriteLine(key + "에 해당하는 값을 찾을 수 없습니다.");
+                return default(TValue);
+            }
+
+            set
+            {
+                int i = SortHelper<TKey>.BinarySearch(keys, 0, _size, key, comparer);
+                if (i >= 0)
+                    values[i] = value;
+                else
+                    Insert(~i, key, value);
+            }
+        }
         #endregion
 
         #region 메소드 (Method)
@@ -100,7 +122,7 @@ namespace DataStructure.MySortedList
             // SortHelper를 통해 key에 해당하는 위치를 찾습니다.
             // 만약 양수라면 key가 이미 존재하는, 중복된 key라는 뜻이고
             // 음수라면 NOT 연산을 통해 삽입되어야하는 위치를 얻을 수 있습니다.
-            int index = SortHelper<TKey>.BinaraySearch(keys, 0, _size, key, comparer);
+            int index = SortHelper<TKey>.BinarySearch(keys, 0, _size, key, comparer);
             if (index >= 0)
             {
                 Console.WriteLine("중복된 key를 추가하려고 하고 있습니다.");
@@ -140,6 +162,17 @@ namespace DataStructure.MySortedList
             if ((uint)newCapacity > MaxArrayLength) newCapacity = MaxArrayLength;
             if (newCapacity < min) newCapacity = min;
             Capacity = newCapacity;
+        }
+
+        private int IndexOfKey(TKey key)
+        {
+            if (key == null)
+            {
+                Console.WriteLine("keys는 null이 될 수 없습니다.");
+                return -1;
+            }
+            int i = SortHelper<TKey>.BinarySearch(keys, 0, _size, key, comparer);
+            return i >= 0 ? i : -1;
         }
     }
 }
