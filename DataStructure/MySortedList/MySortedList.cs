@@ -138,6 +138,75 @@ namespace DataStructure.MySortedList
             Array.Clear(values, 0, _size);
             _size = 0;
         }
+
+        public bool ContainsKey(TKey key)
+        {
+            return IndexOfKey(key) >= 0;
+        }
+
+        public bool ContainsValue(TValue value)
+        {
+            return IndexOfValue(value) >= 0;
+        }
+
+        public int IndexOfKey(TKey key)
+        {
+            if (key == null)
+            {
+                Console.WriteLine("keys는 null이 될 수 없습니다.");
+                return -1;
+            }
+            int i = SortHelper<TKey>.BinarySearch(keys, 0, _size, key, comparer);
+            return i >= 0 ? i : -1;
+        }
+
+        public int IndexOfValue(TValue value)
+        {
+            int i = SortHelper<TValue>.BinarySearch(values, 0, _size, value, Comparer<TValue>.Default);
+            return i >= 0 ? i : -1;
+        }
+
+        public bool Remove(TKey key)
+        {
+            int i = IndexOfKey(key);
+            if (i >= 0)
+                RemoveAt(i);
+            return i >= 0;
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (index < 0 || index >= _size)
+            {
+                Console.WriteLine("범위를 벗어났습니다.");
+                return;
+            }
+
+            // 미리 크기를 1 줄입니다. 제거하고자 하는 index 위치의 다음 원소들을
+            // 모두 index 위치부터 시작하게 복사합니다. 그 후 제일 마지막에 있는
+            // 쓰레기값을 default 로 초기화합니다.
+            _size--;
+            if (index < _size)
+            {
+                Array.Copy(keys, index + 1, keys, index, _size - index);
+                Array.Copy(values, index + 1, values, index, _size - index);
+            }
+            keys[_size] = default(TKey);
+            values[_size] = default(TValue);
+        }
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            int i = IndexOfKey(key);
+            if (i >= 0)
+            {
+                value = values[i];
+                return true;
+            }
+
+            value = default(TValue);
+            return false;
+        }
         #endregion
 
         // index의 위치에 key와 value를 삽입합니다.
@@ -162,17 +231,6 @@ namespace DataStructure.MySortedList
             if ((uint)newCapacity > MaxArrayLength) newCapacity = MaxArrayLength;
             if (newCapacity < min) newCapacity = min;
             Capacity = newCapacity;
-        }
-
-        private int IndexOfKey(TKey key)
-        {
-            if (key == null)
-            {
-                Console.WriteLine("keys는 null이 될 수 없습니다.");
-                return -1;
-            }
-            int i = SortHelper<TKey>.BinarySearch(keys, 0, _size, key, comparer);
-            return i >= 0 ? i : -1;
         }
     }
 }
